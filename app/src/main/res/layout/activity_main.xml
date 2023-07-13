@@ -10,13 +10,19 @@
         android:id="@+id/editTextName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/hint_name" />
+        android:hint="@string/hint_name"
+        android:minHeight="48dp"
+        android:autofillHints="Name"
+        android:inputType="text" />
 
     <EditText
         android:id="@+id/editTextPhone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/hint_phone" />
+        android:hint="@string/hint_phone"
+        android:minHeight="48dp"
+        android:autofillHints="phone"
+        android:inputType="text" />
 
     <Button
         android:id="@+id/buttonAddContact"
