@@ -3,4 +3,6 @@
     <string name="hint_name">Name</string>
     <string name="hint_phone">Phone</string>
     <string name="add_contact">Add Contact</string>
+    <string name="edit_contact">Edit Contact</string>
+    <string name="delete_contact">Delete Contact</string>
 </resources>

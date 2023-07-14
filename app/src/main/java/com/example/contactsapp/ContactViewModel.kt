@@ -3,5 +3,5 @@ package com.example.contactsapp
 import androidx.lifecycle.ViewModel
 
 class ContactViewModel : ViewModel() {
-    val contacts: ArrayList<String> = ArrayList()
+    val contacts: ArrayList<Contact> = ArrayList()
 }

@@ -5,11 +5,14 @@ import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.contactsapp.databinding.ActivityMainBinding
+import android.widget.Toast
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var contactAdapter: ArrayAdapter<String>
+    private lateinit var contactAdapter: ArrayAdapter<Contact>
     private lateinit var viewModel: ContactViewModel
+    private var selectedContact: Contact? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,20 +32,27 @@ class MainActivity : AppCompatActivity() {
         binding.buttonAddContact.setOnClickListener {
             val name = binding.editTextName.text.toString()
             val phone = binding.editTextPhone.text.toString()
-            val contact = "$name - $phone"
 
-            viewModel.contacts.add(contact)
+            if (selectedContact != null) {
+                // Update existing contact
+                selectedContact?.name = name
+                selectedContact?.phone = phone
+                selectedContact = null
+            } else {
+                // Add new contact
+                val contact = Contact(viewModel.contacts.size + 1, name, phone)
+                viewModel.contacts.add(contact)
+            }
+
             contactAdapter.notifyDataSetChanged()
             clearFields()
         }
 
         binding.listViewContacts.setOnItemClickListener { _, _, position, _ ->
             val contact = viewModel.contacts[position]
-            val name = contact.split(" - ")[0]
-            val phone = contact.split(" - ")[1]
-
-            binding.editTextName.setText(name)
-            binding.editTextPhone.setText(phone)
+            binding.editTextName.setText(contact.name)
+            binding.editTextPhone.setText(contact.phone)
+            selectedContact = contact
         }
 
         binding.listViewContacts.setOnItemLongClickListener { _, _, position, _ ->
@@ -51,6 +61,26 @@ class MainActivity : AppCompatActivity() {
             clearFields()
             true
         }
+
+        binding.buttonEditContact.setOnClickListener {
+            if (selectedContact != null) {
+                binding.editTextName.setText(selectedContact?.name)
+                binding.editTextPhone.setText(selectedContact?.phone)
+            } else {
+                Toast.makeText(this, "Select a contact to edit", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.buttonDeleteContact.setOnClickListener {
+            if (selectedContact != null) {
+                viewModel.contacts.remove(selectedContact)
+                contactAdapter.notifyDataSetChanged()
+                clearFields()
+                selectedContact = null
+            } else {
+                Toast.makeText(this, "Select a contact to delete", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun clearFields() {
@@ -58,3 +88,6 @@ class MainActivity : AppCompatActivity() {
         binding.editTextPhone.text.clear()
     }
 }
+
+
+
