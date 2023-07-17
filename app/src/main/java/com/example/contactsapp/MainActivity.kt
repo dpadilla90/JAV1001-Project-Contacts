@@ -82,8 +82,10 @@ class MainActivity : AppCompatActivity() {
 
             // Start the ContactDetailsActivity
             val intent = Intent(this, ContactDetailsActivity::class.java)
+            intent.putExtra("contact", contact)
             startActivity(intent)
         }
+
 
 
     }

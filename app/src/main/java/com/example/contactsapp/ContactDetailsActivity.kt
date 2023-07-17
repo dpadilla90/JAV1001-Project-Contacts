@@ -1,8 +1,13 @@
 package com.example.contactsapp
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+
+
+import com.example.contactsapp.databinding.ActivityMainBinding
 
 class ContactDetailsActivity : AppCompatActivity() {
 
@@ -21,8 +26,15 @@ class ContactDetailsActivity : AppCompatActivity() {
             textViewPhoneNumber.text = selectedContact.phone
 
             // Set additional TextViews or views with the respective contact details
+
+            val buttonEditContact: Button = findViewById(R.id.buttonEditContact)
+            buttonEditContact.setOnClickListener {
+                val intent = Intent(this, EditContactActivity::class.java)
+                intent.putExtra("contact", selectedContact)
+                startActivity(intent)
+            }
         }
     }
-
 }
+
 
