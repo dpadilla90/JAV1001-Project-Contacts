@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.contactsapp.databinding.ActivityMainBinding
 import android.widget.Toast
+import android.content.Intent
 
 
 class MainActivity : AppCompatActivity() {
@@ -21,11 +22,11 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        viewModel = ViewModelProvider(this).get(ContactViewModel::class.java)
+        viewModel = ViewModelProvider(this)[ContactViewModel::class.java]
 
         // Initialize the contactAdapter only if it is null
         if (!::contactAdapter.isInitialized) {
-            contactAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, viewModel.contacts)
+            contactAdapter = ContactAdapter(this, viewModel.contacts)
             binding.listViewContacts.adapter = contactAdapter
         }
 
@@ -62,14 +63,7 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        binding.buttonEditContact.setOnClickListener {
-            if (selectedContact != null) {
-                binding.editTextName.setText(selectedContact?.name)
-                binding.editTextPhone.setText(selectedContact?.phone)
-            } else {
-                Toast.makeText(this, "Select a contact to edit", Toast.LENGTH_SHORT).show()
-            }
-        }
+
 
         binding.buttonDeleteContact.setOnClickListener {
             if (selectedContact != null) {
@@ -81,6 +75,17 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Select a contact to delete", Toast.LENGTH_SHORT).show()
             }
         }
+
+        binding.listViewContacts.setOnItemClickListener { _, _, position, _ ->
+            val contact = viewModel.contacts[position]
+            ContactManager.selectedContact = contact
+
+            // Start the ContactDetailsActivity
+            val intent = Intent(this, ContactDetailsActivity::class.java)
+            startActivity(intent)
+        }
+
+
     }
 
     private fun clearFields() {
