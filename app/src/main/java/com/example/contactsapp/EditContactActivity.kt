@@ -36,10 +36,13 @@ class EditContactActivity : AppCompatActivity() {
                 contact.name = newName
                 contact.phone = newPhone
 
-                // Update the contact in ContactViewModel
-                ContactManager.updateContact(contact)
+                // Update the contact in the viewModel.contacts list
+                val index = viewModel.contacts.indexOfFirst { it.id == contact.id }
+                if (index != -1) {
+                    viewModel.contacts[index] = contact
+                }
 
-                // Return to the ContactDetailsActivity with the updated contact information
+                // Return to the MainActivity with the updated contact information
                 val returnIntent = Intent()
                 returnIntent.putExtra("updatedContact", contact)
                 setResult(Activity.RESULT_OK, returnIntent)
@@ -48,4 +51,3 @@ class EditContactActivity : AppCompatActivity() {
         }
     }
 }
-

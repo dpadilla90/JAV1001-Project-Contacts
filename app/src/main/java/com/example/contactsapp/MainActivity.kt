@@ -1,19 +1,22 @@
 package com.example.contactsapp
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.contactsapp.databinding.ActivityMainBinding
-import android.widget.Toast
-import android.content.Intent
-
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var contactAdapter: ArrayAdapter<Contact>
     private lateinit var viewModel: ContactViewModel
     private var selectedContact: Contact? = null
+
+    private companion object {
+        private const val EDIT_CONTACT_REQUEST_CODE = 1
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,11 +27,8 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this)[ContactViewModel::class.java]
 
-        // Initialize the contactAdapter only if it is null
-        if (!::contactAdapter.isInitialized) {
-            contactAdapter = ContactAdapter(this, viewModel.contacts)
-            binding.listViewContacts.adapter = contactAdapter
-        }
+        contactAdapter = ContactAdapter(this, viewModel.contacts)
+        binding.listViewContacts.adapter = contactAdapter
 
         binding.buttonAddContact.setOnClickListener {
             val name = binding.editTextName.text.toString()
@@ -63,38 +63,35 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-
-
-        binding.buttonDeleteContact.setOnClickListener {
-            if (selectedContact != null) {
-                viewModel.contacts.remove(selectedContact)
-                contactAdapter.notifyDataSetChanged()
-                clearFields()
-                selectedContact = null
-            } else {
-                Toast.makeText(this, "Select a contact to delete", Toast.LENGTH_SHORT).show()
-            }
-        }
-
         binding.listViewContacts.setOnItemClickListener { _, _, position, _ ->
             val contact = viewModel.contacts[position]
             ContactManager.selectedContact = contact
 
-            // Start the ContactDetailsActivity
-            val intent = Intent(this, ContactDetailsActivity::class.java)
+            // Start the EditContactActivity and wait for the result
+            val intent = Intent(this, EditContactActivity::class.java)
             intent.putExtra("contact", contact)
-            startActivity(intent)
+            startActivityForResult(intent, EDIT_CONTACT_REQUEST_CODE)
         }
-
-
-
     }
 
     private fun clearFields() {
         binding.editTextName.text.clear()
         binding.editTextPhone.text.clear()
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == EDIT_CONTACT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val updatedContact = data?.getParcelableExtra<Contact>("updatedContact")
+            if (updatedContact != null) {
+                // Update the contact in the contact list
+                val index = viewModel.contacts.indexOfFirst { it.id == updatedContact.id }
+                if (index != -1) {
+                    viewModel.contacts[index] = updatedContact
+                    contactAdapter.notifyDataSetChanged()
+                }
+            }
+        }
+    }
 }
-
-
-
