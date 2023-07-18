@@ -7,7 +7,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
 
-import com.example.contactsapp.databinding.ActivityMainBinding
 
 class ContactDetailsActivity : AppCompatActivity() {
 
@@ -35,6 +34,22 @@ class ContactDetailsActivity : AppCompatActivity() {
             }
         }
     }
+    override fun onResume() {
+        super.onResume()
+
+        // Retrieve the selected contact from ContactManager
+        val selectedContact = ContactManager.selectedContact
+
+        if (selectedContact != null) {
+            // Display the updated contact's information in the UI
+            val textViewName: TextView = findViewById(R.id.textViewName)
+            val textViewPhoneNumber: TextView = findViewById(R.id.textViewPhoneNumber)
+
+            textViewName.text = selectedContact.name
+            textViewPhoneNumber.text = selectedContact.phone
+        }
+    }
+
 }
 
 
