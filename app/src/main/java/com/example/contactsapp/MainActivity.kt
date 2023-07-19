@@ -4,11 +4,15 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.contactsapp.databinding.ActivityMainBinding
 
 import com.google.android.material.snackbar.Snackbar
+import parcelableArrayList
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -16,9 +20,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: ContactViewModel
     private var selectedContact: Contact? = null
 
-    private companion object {
-        private const val EDIT_CONTACT_REQUEST_CODE = 1
-    }
+    private lateinit var editContactLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +33,35 @@ class MainActivity : AppCompatActivity() {
 
         contactAdapter = ContactAdapter(this, viewModel.contacts)
         binding.listViewContacts.adapter = contactAdapter
+
+        editContactLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data
+                val updatedContacts: ArrayList<Contact>? = data?.parcelableArrayList("updatedContacts")
+                val deletedContact: ArrayList<Contact>? = data?.parcelableArrayList("deletedContact")
+
+
+
+
+                if (updatedContacts != null) {
+                    for (updatedContact in updatedContacts) {
+                        // Update the contact in the contact list
+                        val index = viewModel.contacts.indexOfFirst { it.id == updatedContact.id }
+                        if (index != -1) {
+                            viewModel.contacts[index] = updatedContact
+                        }
+                    }
+                } else if (deletedContact != null) {
+                    // Remove the contacts from the contact list
+                    for (contact in deletedContact) {
+                        viewModel.contacts.remove(contact)
+                    }
+                }
+
+                // Notify the contact adapter of the changes
+                contactAdapter.notifyDataSetChanged()
+            }
+        }
 
         binding.buttonAddContact.setOnClickListener {
             val name = binding.editTextName.text.toString()
@@ -73,10 +104,10 @@ class MainActivity : AppCompatActivity() {
             val contact = viewModel.contacts[position]
             ContactManager.selectedContact = contact
 
-            // Start the EditContactActivity and wait for the result
+            // Start the EditContactActivity using the ActivityResultLauncher
             val intent = Intent(this, EditContactActivity::class.java)
             intent.putExtra("contact", contact)
-            startActivityForResult(intent, EDIT_CONTACT_REQUEST_CODE)
+            editContactLauncher.launch(intent)
         }
     }
 
@@ -91,30 +122,5 @@ class MainActivity : AppCompatActivity() {
             "Contact ${contact.name} deleted",
             Snackbar.LENGTH_LONG
         ).show()
-    }
-
-
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == EDIT_CONTACT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            val updatedContact = data?.getParcelableExtra<Contact>("updatedContact")
-            val deletedContact = data?.getParcelableExtra<Contact>("deletedContact")
-
-            if (updatedContact != null) {
-                // Update the contact in the contact list
-                val index = viewModel.contacts.indexOfFirst { it.id == updatedContact.id }
-                if (index != -1) {
-                    viewModel.contacts[index] = updatedContact
-                }
-            } else if (deletedContact != null) {
-                // Remove the contact from the contact list
-                viewModel.contacts.remove(deletedContact)
-            }
-
-            // Notify the contact adapter of the changes
-            contactAdapter.notifyDataSetChanged()
-        }
     }
 }

@@ -36,12 +36,6 @@ class EditContactActivity : AppCompatActivity() {
                 contact.name = newName
                 contact.phone = newPhone
 
-                // Update the contact in the viewModel.contacts list
-                val index = viewModel.contacts.indexOfFirst { it.id == contact.id }
-                if (index != -1) {
-                    viewModel.contacts[index] = contact
-                }
-
                 // Return to the MainActivity with the updated contact information
                 val returnIntent = Intent()
                 returnIntent.putExtra("updatedContact", contact)
@@ -51,16 +45,11 @@ class EditContactActivity : AppCompatActivity() {
 
             // Set the click listener for the Delete button
             binding.buttonDeleteContact.setOnClickListener {
-                // Remove the contact from the viewModel.contacts list
-                viewModel.contacts.remove(contact)
-
-                // Return to the MainActivity with the deleted contact information
                 val returnIntent = Intent()
-                returnIntent.putExtra("deletedContact", contact)
+                returnIntent.putParcelableArrayListExtra("deletedContact", arrayListOf(contact))
                 setResult(Activity.RESULT_OK, returnIntent)
                 finish()
             }
         }
     }
-
 }
