@@ -7,19 +7,23 @@
         android:id="@+id/editTextName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Name" />
+        android:hint="@string/hint_name"
+        android:autofillHints="Name"
+        android:inputType="textPersonName"/>
 
     <EditText
         android:id="@+id/editTextPhone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Phone" />
+        android:hint="@string/hint_phone"
+        android:autofillHints="phone"
+        android:inputType="phone"/>
 
     <Button
         android:id="@+id/buttonSaveContact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Save" />
+        android:text="@string/save_contact" />
     <Button
         android:id="@+id/buttonDeleteContact"
         android:layout_width="match_parent"
