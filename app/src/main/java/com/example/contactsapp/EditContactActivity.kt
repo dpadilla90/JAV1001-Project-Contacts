@@ -48,6 +48,19 @@ class EditContactActivity : AppCompatActivity() {
                 setResult(Activity.RESULT_OK, returnIntent)
                 finish()
             }
+
+            // Set the click listener for the Delete button
+            binding.buttonDeleteContact.setOnClickListener {
+                // Remove the contact from the viewModel.contacts list
+                viewModel.contacts.remove(contact)
+
+                // Return to the MainActivity with the deleted contact information
+                val returnIntent = Intent()
+                returnIntent.putExtra("deletedContact", contact)
+                setResult(Activity.RESULT_OK, returnIntent)
+                finish()
+            }
         }
     }
+
 }

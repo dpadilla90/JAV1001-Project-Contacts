@@ -31,11 +31,6 @@
         android:text="@string/add_contact" />
 
 
-    <Button
-        android:id="@+id/buttonDeleteContact"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/delete_contact" />
 
 
     <ListView

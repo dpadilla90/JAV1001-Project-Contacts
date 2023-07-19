@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.contactsapp.databinding.ActivityMainBinding
 
+import com.google.android.material.snackbar.Snackbar
+
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var contactAdapter: ArrayAdapter<Contact>
@@ -57,9 +59,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.listViewContacts.setOnItemLongClickListener { _, _, position, _ ->
+            val contact = viewModel.contacts[position]
             viewModel.contacts.removeAt(position)
             contactAdapter.notifyDataSetChanged()
             clearFields()
+
+            showDeleteSnackbar(contact)
+
             true
         }
 
@@ -79,19 +85,36 @@ class MainActivity : AppCompatActivity() {
         binding.editTextPhone.text.clear()
     }
 
+    private fun showDeleteSnackbar(contact: Contact) {
+        Snackbar.make(
+            binding.root,
+            "Contact ${contact.name} deleted",
+            Snackbar.LENGTH_LONG
+        ).show()
+    }
+
+
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == EDIT_CONTACT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val updatedContact = data?.getParcelableExtra<Contact>("updatedContact")
+            val deletedContact = data?.getParcelableExtra<Contact>("deletedContact")
+
             if (updatedContact != null) {
                 // Update the contact in the contact list
                 val index = viewModel.contacts.indexOfFirst { it.id == updatedContact.id }
                 if (index != -1) {
                     viewModel.contacts[index] = updatedContact
-                    contactAdapter.notifyDataSetChanged()
                 }
+            } else if (deletedContact != null) {
+                // Remove the contact from the contact list
+                viewModel.contacts.remove(deletedContact)
             }
+
+            // Notify the contact adapter of the changes
+            contactAdapter.notifyDataSetChanged()
         }
     }
 }
