@@ -4,6 +4,11 @@
     <string name="hint_phone">Phone</string>
     <string name="add_contact">Add Contact</string>
     <string name="edit_contact">Edit Contact</string>
+    <string name="create_contact">Create Contact</string>
+    <string name="edit_name">Edit name</string>
+    <string name="edit_phone">Edit Phone Number</string>
     <string name="delete_contact">Delete Contact</string>
     <string name="save_contact">Save Contact</string>
+    <string name="phone_content_description">Enter contact phone number</string>
+    <string name="name_content_description">Enter contact name</string>
 </resources>

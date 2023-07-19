@@ -1,41 +1,73 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".MainActivity">
+    android:background="#F5F5F5">
 
-    <EditText
-        android:id="@+id/editTextName"
+    <TextView
+        android:id="@+id/textViewTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/hint_name"
-        android:minHeight="48dp"
-        android:autofillHints="Name"
-        android:inputType="textPersonName" />
+        android:text="@string/create_contact"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:gravity="center"
+        android:layout_marginBottom="16dp" />
 
-    <EditText
-        android:id="@+id/editTextPhone"
-        android:layout_width="match_parent"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutName"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewTitle"
+        android:hint="@string/hint_name"
+        android:layout_marginBottom="16dp">
+
+        <EditText
+            android:id="@+id/editTextName"
+            android:autofillHints="Name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:textColor="#000000" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutPhone"
+        android:layout_width="400dp"
         android:layout_height="wrap_content"
         android:hint="@string/hint_phone"
-        android:minHeight="48dp"
-        android:autofillHints="phone"
-        android:inputType="phone" />
+        android:layout_below="@id/textInputLayoutName"
+        android:layout_marginBottom="16dp">
+
+        <EditText
+            android:id="@+id/editTextPhone"
+            android:autofillHints="phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            android:textColor="#000000"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/buttonAddContact"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/add_contact" />
-
-
-
+        android:text="@string/add_contact"
+        android:textColor="#FFFFFF"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/textInputLayoutPhone"
+        android:layout_marginTop="16dp" />
 
     <ListView
         android:id="@+id/listViewContacts"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        android:layout_below="@id/buttonAddContact"
+        android:layout_marginTop="16dp" />
 
-</LinearLayout>
+</RelativeLayout>
