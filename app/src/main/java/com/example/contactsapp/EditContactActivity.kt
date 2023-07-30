@@ -26,15 +26,21 @@ class EditContactActivity : AppCompatActivity() {
             // Populate the EditText fields with the contact's information
             binding.editTextName.setText(contact.name)
             binding.editTextPhone.setText(contact.phone)
+            binding.editTextCompany.setText(contact.company) // Populate the company field
+            binding.editTextEmail.setText(contact.email) // Populate the email field
 
             // Set the click listener for the Save button
             binding.buttonSaveContact.setOnClickListener {
                 val newName = binding.editTextName.text.toString()
                 val newPhone = binding.editTextPhone.text.toString()
+                val newCompany = binding.editTextCompany.text.toString()
+                val newEmail = binding.editTextEmail.text.toString()
 
                 // Update the contact's information
                 contact.name = newName
                 contact.phone = newPhone
+                contact.company = newCompany // Update the company field
+                contact.email = newEmail // Update the email field
 
                 // Return to the MainActivity with the updated contact information
                 val returnIntent = Intent()

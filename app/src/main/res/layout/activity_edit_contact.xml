@@ -1,4 +1,7 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- activity_edit_contact.xml -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -17,7 +20,8 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="400dp"
         android:layout_height="wrap_content"
-        android:hint="@string/hint_name">
+        android:hint="@string/hint_name"
+        android:layout_marginBottom="16dp">
 
         <EditText
             android:id="@+id/editTextName"
@@ -25,25 +29,23 @@
             android:autofillHints="Name"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:contentDescription="@string/name_content_description"
             android:textSize="18sp"
             android:textColor="@color/black"
-            android:backgroundTint="@color/white"
-            />
+            android:backgroundTint="@color/white" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="400dp"
         android:layout_height="wrap_content"
-        android:hint="@string/hint_phone">
+        android:hint="@string/hint_phone"
+        android:layout_marginBottom="16dp">
 
         <EditText
             android:id="@+id/editTextPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="phone"
-            android:contentDescription="@string/phone_content_description"
             android:autofillHints="phone"
             android:minHeight="48dp"
             android:textColor="@color/black"
@@ -52,6 +54,46 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+
+
+    <!-- Email TextInputLayout -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_email"
+        android:layout_marginBottom="16dp">
+
+        <EditText
+            android:id="@+id/editTextEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:backgroundTint="@color/white"
+            android:autofillHints="emailAddress"
+        />
+
+    </com.google.android.material.textfield.TextInputLayout>
+    <!-- Company TextInputLayout -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_company"
+        android:layout_marginBottom="16dp">
+
+        <EditText
+            android:id="@+id/editTextCompany"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:backgroundTint="@color/white"
+            android:autofillHints="company"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
     <Button
         android:id="@+id/buttonSaveContact"
         android:layout_width="200dp"
@@ -59,7 +101,7 @@
         android:text="@string/save_contact"
         android:textSize="20sp"
         android:textColor="@color/white"
-        android:layout_marginTop="15dp"/>
+       />
 
     <Button
         android:id="@+id/buttonDeleteContact"

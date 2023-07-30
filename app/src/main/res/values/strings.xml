@@ -2,6 +2,8 @@
     <string name="app_name">Contacts App</string>
     <string name="hint_name">Name</string>
     <string name="hint_phone">Phone</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_company">Company</string>
     <string name="add_contact">Add Contact</string>
     <string name="edit_contact">Edit Contact</string>
     <string name="create_contact">Create Contact</string>
@@ -11,4 +13,6 @@
     <string name="save_contact">Save Contact</string>
     <string name="phone_content_description">Enter contact phone number</string>
     <string name="name_content_description">Enter contact name</string>
+    <string name="email_content_description">Enter contact email address</string>
+    <string name="company_content_description">Enter contact company name</string>
 </resources>

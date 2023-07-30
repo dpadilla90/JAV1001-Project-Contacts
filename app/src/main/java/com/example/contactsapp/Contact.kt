@@ -4,17 +4,27 @@ import android.os.Parcel
 import android.os.Parcelable
 
 /**
- * Represents a contact with an ID, name, and phone number.
+ * Represents a contact with an ID, name, phone number, company, and email.
  *
  * @property id The ID of the contact.
  * @property name The name of the contact.
  * @property phone The phone number of the contact.
+ * @property company The company of the contact.
+ * @property email The email of the contact.
  */
-data class Contact(val id: Int, var name: String, var phone: String) : Parcelable {
+data class Contact(
+    val id: Int,
+    var name: String,
+    var phone: String,
+    var company: String?,
+    var email: String?
+) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
         parcel.readString()!!,
-        parcel.readString()!!
+        parcel.readString()!!,
+        parcel.readString(),
+        parcel.readString()
     )
 
     /**
@@ -27,6 +37,8 @@ data class Contact(val id: Int, var name: String, var phone: String) : Parcelabl
         parcel.writeInt(id)
         parcel.writeString(name)
         parcel.writeString(phone)
+        parcel.writeString(company)
+        parcel.writeString(email)
     }
 
     /**

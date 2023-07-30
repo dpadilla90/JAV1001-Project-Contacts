@@ -9,10 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.contactsapp.databinding.ActivityMainBinding
-
 import com.google.android.material.snackbar.Snackbar
-import parcelableArrayList
-
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -41,17 +38,15 @@ class MainActivity : AppCompatActivity() {
         editContactLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val data = result.data
-                val updatedContacts: ArrayList<Contact>? = data?.parcelableArrayList("updatedContacts")
-                val deletedContact: ArrayList<Contact>? = data?.parcelableArrayList("deletedContact")
+                val updatedContact: Contact? = data?.getParcelableExtra("updatedContact")
+                val deletedContact: ArrayList<Contact>? = data?.getParcelableArrayListExtra("deletedContact")
 
-                // Handle the updated contacts
-                if (updatedContacts != null) {
-                    for (updatedContact in updatedContacts) {
-                        // Update the contact in the contact list
-                        val index = viewModel.contacts.indexOfFirst { it.id == updatedContact.id }
-                        if (index != -1) {
-                            viewModel.contacts[index] = updatedContact
-                        }
+                // Handle the updated contact
+                if (updatedContact != null) {
+                    // Update the contact in the contact list
+                    val index = viewModel.contacts.indexOfFirst { it.id == updatedContact.id }
+                    if (index != -1) {
+                        viewModel.contacts[index] = updatedContact
                     }
                 }
 
@@ -72,15 +67,19 @@ class MainActivity : AppCompatActivity() {
         binding.buttonAddContact.setOnClickListener {
             val name = binding.editTextName.text.toString()
             val phone = binding.editTextPhone.text.toString()
+            val company = binding.editTextCompany.text.toString() // Get the company from the input field
+            val email = binding.editTextEmail.text.toString() // Get the email from the input field
 
             if (selectedContact != null) {
                 // Update existing contact
                 selectedContact?.name = name
                 selectedContact?.phone = phone
+                selectedContact?.company = company // Update the company field
+                selectedContact?.email = email // Update the email field
                 selectedContact = null
             } else {
                 // Add new contact
-                val contact = Contact(viewModel.contacts.size + 1, name, phone)
+                val contact = Contact(viewModel.contacts.size + 1, name, phone, company, email) // Pass the company and email as well
                 viewModel.contacts.add(contact)
             }
 
@@ -94,6 +93,8 @@ class MainActivity : AppCompatActivity() {
             val contact = viewModel.contacts[position]
             binding.editTextName.setText(contact.name)
             binding.editTextPhone.setText(contact.phone)
+            binding.editTextCompany.setText(contact.company)
+            binding.editTextEmail.setText(contact.email)
             selectedContact = contact
         }
 
@@ -126,6 +127,8 @@ class MainActivity : AppCompatActivity() {
     private fun clearFields() {
         binding.editTextName.text.clear()
         binding.editTextPhone.text.clear()
+        binding.editTextCompany.text.clear()
+        binding.editTextEmail.text.clear()
     }
 
     // Function to show a Snackbar indicating contact deletion

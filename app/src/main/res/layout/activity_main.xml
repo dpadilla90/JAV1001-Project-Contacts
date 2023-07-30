@@ -1,4 +1,7 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- activity_main.xml -->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
@@ -47,8 +50,45 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="phone"
-            android:textColor="#000000"
-            />
+            android:textColor="#000000" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Email TextInputLayout -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutEmail"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:layout_below="@id/textInputLayoutPhone"
+        android:layout_marginBottom="16dp">
+
+        <EditText
+            android:id="@+id/editTextEmail"
+            android:autofillHints="email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:textColor="#000000" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Company TextInputLayout -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutCompany"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:hint="Company"
+        android:layout_below="@id/textInputLayoutEmail"
+        android:layout_marginBottom="16dp">
+
+        <EditText
+            android:id="@+id/editTextCompany"
+            android:autofillHints="company"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:textColor="#000000" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -59,7 +99,7 @@
         android:text="@string/add_contact"
         android:textColor="#FFFFFF"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/textInputLayoutPhone"
+        android:layout_below="@id/textInputLayoutCompany"
         android:layout_marginTop="16dp" />
 
     <ListView

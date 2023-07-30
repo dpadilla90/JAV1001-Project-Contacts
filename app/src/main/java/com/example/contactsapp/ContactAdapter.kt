@@ -28,7 +28,7 @@ class ContactAdapter(context: Context, contacts: ArrayList<Contact>) :
         val contact = getItem(position)
 
         val textView = view.findViewById<TextView>(android.R.id.text1)
-        textView.text = "${contact?.name} - ${contact?.phone}"
+        textView.text = contact?.name
 
         return view
     }

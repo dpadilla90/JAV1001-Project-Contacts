@@ -24,3 +24,5 @@ inline fun <reified T : Parcelable> Intent.parcelableArrayList(key: String): Arr
     SDK_INT >= 33 -> getParcelableArrayListExtra(key, T::class.java)
     else -> @Suppress("DEPRECATION") getParcelableArrayListExtra(key)
 }
+
+
