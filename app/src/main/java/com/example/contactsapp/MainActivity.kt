@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
 
         // Initialize the adapter with an empty mutable list
         contactAdapter = ContactAdapter(this, mutableListOf())
-
         binding.listViewContacts.adapter = contactAdapter
 
         // Observe the LiveData from the ViewModel
@@ -67,8 +66,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
-        // Set up the click listener for the Add Contact button
         // Set up the click listener for the Add Contact button
         binding.buttonAddContact.setOnClickListener {
             val name = binding.editTextName.text.toString()
