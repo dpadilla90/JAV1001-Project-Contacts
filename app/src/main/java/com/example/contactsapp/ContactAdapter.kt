@@ -12,7 +12,7 @@ import android.widget.TextView
  * @param context The context of the activity or fragment.
  * @param contacts The list of contacts to display.
  */
-class ContactAdapter(context: Context, contacts: ArrayList<Contact>) :
+class ContactAdapter(context: Context, contacts: List<Contact>) :
     ArrayAdapter<Contact>(context, android.R.layout.simple_list_item_1, contacts) {
 
     /**
