@@ -2,6 +2,8 @@ package com.example.contactsapp
 
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 /**
  * Represents a contact with an ID, name, phone number, company, and email.
@@ -12,8 +14,9 @@ import android.os.Parcelable
  * @property company The company of the contact.
  * @property email The email of the contact.
  */
+@Entity
 data class Contact(
-    val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int,
     var name: String,
     var phone: String,
     var company: String?,
