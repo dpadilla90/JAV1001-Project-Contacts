@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -30,98 +31,98 @@ class MainActivity : AppCompatActivity() {
         // Initialize the ViewModel
         viewModel = ViewModelProvider(this)[ContactViewModel::class.java]
 
-        // Set up the contact adapter and attach it to the ListView
-        contactAdapter = ContactAdapter(this, viewModel.contacts)
+
+        // Initialize the adapter with an empty mutable list
+        contactAdapter = ContactAdapter(this, mutableListOf())
+
         binding.listViewContacts.adapter = contactAdapter
+
+        // Observe the LiveData from the ViewModel
+        viewModel.contacts.observe(this) { contacts ->
+            // Replace the internal data of the adapter with the new list
+            contactAdapter.clear()
+            contactAdapter.addAll(contacts)
+            contactAdapter.notifyDataSetChanged()
+        }
 
         // Set up the ActivityResultLauncher for launching EditContactActivity
         editContactLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val data = result.data
                 val updatedContact: Contact? = data?.getParcelableExtra("updatedContact")
-                val deletedContact: ArrayList<Contact>? = data?.getParcelableArrayListExtra("deletedContact")
+                val deletedContacts: ArrayList<Contact>? = data?.getParcelableArrayListExtra("deletedContact")
 
                 // Handle the updated contact
-                if (updatedContact != null) {
-                    // Update the contact in the contact list
-                    val index = viewModel.contacts.indexOfFirst { it.id == updatedContact.id }
-                    if (index != -1) {
-                        viewModel.contacts[index] = updatedContact
-                    }
+                updatedContact?.let {
+                    viewModel.addOrUpdateContact(it)
                 }
 
                 // Handle the deleted contacts
-                if (deletedContact != null) {
-                    for (contact in deletedContact) {
-                        // Remove the contacts from the contact list
-                        viewModel.contacts.remove(contact)
+                deletedContacts?.let { contacts ->
+                    for (contact in contacts) {
+                        viewModel.deleteContact(contact)
                     }
                 }
 
-                // Notify the contact adapter of the changes
-                contactAdapter.notifyDataSetChanged()
             }
         }
 
+
+        // Set up the click listener for the Add Contact button
         // Set up the click listener for the Add Contact button
         binding.buttonAddContact.setOnClickListener {
             val name = binding.editTextName.text.toString()
             val phone = binding.editTextPhone.text.toString()
-            val company = binding.editTextCompany.text.toString() // Get the company from the input field
-            val email = binding.editTextEmail.text.toString() // Get the email from the input field
+            val company = binding.editTextCompany.text.toString()
+            val email = binding.editTextEmail.text.toString()
+
+            // Validate name and phone number
+            if (name.isBlank() || phone.isBlank()) {
+                Toast.makeText(this, "Name and Phone number are required!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
             if (selectedContact != null) {
                 // Update existing contact
-                selectedContact?.name = name
-                selectedContact?.phone = phone
-                selectedContact?.company = company // Update the company field
-                selectedContact?.email = email // Update the email field
+                selectedContact?.apply {
+                    this.name = name
+                    this.phone = phone
+                    this.company = company
+                    this.email = email
+                }
+                selectedContact?.let { viewModel.addOrUpdateContact(it) }
                 selectedContact = null
             } else {
                 // Add new contact
-                val contact = Contact(viewModel.contacts.size + 1, name, phone, company, email) // Pass the company and email as well
-                viewModel.contacts.add(contact)
+                val contact = Contact(0, name, phone, company, email)
+                viewModel.addOrUpdateContact(contact)
             }
 
-            // Notify the contact adapter of the changes
-            contactAdapter.notifyDataSetChanged()
             clearFields()
         }
 
-        // Set up the item click listener for the ListView
-        binding.listViewContacts.setOnItemClickListener { _, _, position, _ ->
-            val contact = viewModel.contacts[position]
-            binding.editTextName.setText(contact.name)
-            binding.editTextPhone.setText(contact.phone)
-            binding.editTextCompany.setText(contact.company)
-            binding.editTextEmail.setText(contact.email)
-            selectedContact = contact
-        }
-
-        // Set up the item long click listener for the ListView
-        binding.listViewContacts.setOnItemLongClickListener { _, _, position, _ ->
-            val contact = viewModel.contacts[position]
-            viewModel.contacts.removeAt(position)
-            contactAdapter.notifyDataSetChanged()
-            clearFields()
-
-            // Show a Snackbar indicating the contact deletion
-            showDeleteSnackbar(contact)
-
-            true
-        }
 
         // Set up the item click listener for the ListView
         binding.listViewContacts.setOnItemClickListener { _, _, position, _ ->
-            val contact = viewModel.contacts[position]
+            val contact = viewModel.contacts.value?.get(position) ?: return@setOnItemClickListener
             ContactManager.selectedContact = contact
 
-            // Start the EditContactActivity using the ActivityResultLauncher
             val intent = Intent(this, EditContactActivity::class.java)
             intent.putExtra("contact", contact)
             editContactLauncher.launch(intent)
         }
+
+        // Set up the item long click listener for the ListView
+        binding.listViewContacts.setOnItemLongClickListener { _, _, position, _ ->
+            val contact = viewModel.contacts.value?.get(position) ?: return@setOnItemLongClickListener true
+            viewModel.deleteContact(contact)
+            clearFields()
+            showDeleteSnackbar(contact)
+            true
+        }
     }
+
+
 
     // Function to clear the input fields
     private fun clearFields() {
