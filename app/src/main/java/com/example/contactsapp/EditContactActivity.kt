@@ -1,7 +1,6 @@
 package com.example.contactsapp
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -42,20 +41,20 @@ class EditContactActivity : AppCompatActivity() {
                 contact.company = newCompany // Update the company field
                 contact.email = newEmail // Update the email field
 
-                // Return to the MainActivity with the updated contact information
-                val returnIntent = Intent()
-                returnIntent.putExtra("updatedContact", contact)
-                setResult(Activity.RESULT_OK, returnIntent)
+                // Use ViewModel to save or update contact
+                viewModel.addOrUpdateContact(contact)
+
+                setResult(Activity.RESULT_OK) // Indicate that the operation was successful
                 finish()
             }
 
             // Set the click listener for the Delete button
             binding.buttonDeleteContact.setOnClickListener {
-                val returnIntent = Intent()
-                returnIntent.putParcelableArrayListExtra("deletedContact", arrayListOf(contact))
-                setResult(Activity.RESULT_OK, returnIntent)
+                viewModel.deleteContact(contact)
+                setResult(Activity.RESULT_OK) // Indicate that the operation was successful
                 finish()
             }
         }
     }
 }
+
